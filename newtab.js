@@ -37,11 +37,44 @@ function wireIconButtons() {
   });
 }
 
+function getDailyLessonUrl() {
+  const START_DATE = new Date('2025-01-16T07:00:00Z');
+  const START_DAY = 15;
+
+  const now = new Date();
+  const ukTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
+
+  const startOfToday = new Date(ukTime);
+  startOfToday.setHours(7, 0, 0, 0);
+
+  if (ukTime < startOfToday) {
+    startOfToday.setDate(startOfToday.getDate() - 1);
+  }
+
+  const startReference = new Date('2025-01-16T07:00:00');
+  startReference.setHours(7, 0, 0, 0);
+
+  const diffTime = startOfToday - startReference;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  const dayNumber = START_DAY + diffDays;
+
+  return `https://learn.100school.com/day-${dayNumber}`;
+}
+
+function updateLessonLink() {
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) {
+    startBtn.href = getDailyLessonUrl();
+  }
+}
+
 /* Initialize everything once DOM is ready */
 document.addEventListener('DOMContentLoaded', () => {
   inlineSvgs().then(()=>{});
   lazyLoadMedia();
   wireIconButtons();
+  updateLessonLink();
 });
 
 
